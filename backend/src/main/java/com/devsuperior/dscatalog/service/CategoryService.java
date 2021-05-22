@@ -33,4 +33,13 @@ public class CategoryService {
 	
 	}
 	
+	@Transactional
+	public CategoryDto insert(CategoryDto categoryDto) {
+		Category category = new Category();
+		category.setName(categoryDto.getName());
+		
+		CategoryDto dto = new CategoryDto(categoryRepository.save(category));
+
+		return dto;
+	}
 }
