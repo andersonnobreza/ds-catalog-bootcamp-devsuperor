@@ -22,18 +22,18 @@ import com.devsuperior.dscatalog.service.exception.ResourceNotFoundException;
 public class CategoryService {
 	
 	@Autowired
-	CategoryRepository categoryRepository;
+	CategoryRepository repository;
 	
 	@Transactional(readOnly = true)
 	public Page<CategoryDto> findAllPaged(PageRequest pageRequest){
 			
-		return categoryRepository.findAll(pageRequest)
+		return repository.findAll(pageRequest)
 				.map(x -> new CategoryDto(x));
 
 	}
 	
 	public CategoryDto findById(Long id) {
-		  Optional<Category> obj = categoryRepository.findById(id);
+		  Optional<Category> obj = repository.findById(id);
 		  Category entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		  return new CategoryDto(entity);
 	
@@ -44,7 +44,7 @@ public class CategoryService {
 		Category category = new Category();
 		category.setName(categoryDto.getName());
 	
-		CategoryDto dto = new CategoryDto(categoryRepository.save(category));
+		CategoryDto dto = new CategoryDto(repository.save(category));
 
 		return dto;
 	}
@@ -53,9 +53,9 @@ public class CategoryService {
 	public CategoryDto update(Long id, CategoryDto categoriaDto) {
 		try {
 			
-			Category entity = categoryRepository.getOne(id);
+			Category entity = repository.getOne(id);
 			entity.setName(categoriaDto.getName());
-			CategoryDto dto = new CategoryDto(categoryRepository.save(entity));
+			CategoryDto dto = new CategoryDto(repository.save(entity));
 			return dto;
 		} catch (EntityNotFoundException e) {
 				throw new ResourceNotFoundException("Id not found " + id);
@@ -64,7 +64,7 @@ public class CategoryService {
 
 	public void delete(Long id) {
 		try {
-			categoryRepository.deleteById(id);			
+			repository.deleteById(id);			
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
 		} catch (DataIntegrityViolationException e) {
