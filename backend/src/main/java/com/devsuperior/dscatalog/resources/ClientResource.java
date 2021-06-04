@@ -19,18 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsuperior.dscatalog.dto.CategoryDto;
-import com.devsuperior.dscatalog.dto.ProductDto;
-import com.devsuperior.dscatalog.service.ProductService;
-	
+import com.devsuperior.dscatalog.dto.ClientDto;
+import com.devsuperior.dscatalog.service.ClientService;
+
+
 @RestController
-@RequestMapping(value="/products")
-public class ProductResouce {
+@RequestMapping(value = "/clients")
+public class ClientResource {
+
 	
 	@Autowired
-	ProductService service;
-	
+	ClientService service;
+		
 	@GetMapping
-	public ResponseEntity<Page<ProductDto>> findAll(
+	public ResponseEntity<Page<ClientDto>> findAll(
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
@@ -39,39 +41,40 @@ public class ProductResouce {
 		
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
-		Page<ProductDto> list = service.findAllPaged(pageRequest);
-		
+		Page<ClientDto> list = service.findAllPaged(pageRequest);
 		return ResponseEntity.ok().body(list);
-		
 	}
 	
+
+
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductDto> findById(@PathVariable Long id){
-		ProductDto dto = service.findById(id);
+	public ResponseEntity<ClientDto> findById(@PathVariable Long id){
+		
+		ClientDto dto= service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> insert(@RequestBody ProductDto dto){
-		ProductDto productDto = service.insert(dto);
+	public ResponseEntity<ClientDto> insert(@RequestBody ClientDto clientDto){
+		ClientDto dto = service.insert(clientDto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-			.buildAndExpand(dto.getId()).toUri();
-		 return ResponseEntity.created(uri).body(productDto);
+				.buildAndExpand(dto.getId()).toUri();
+	
+		//response.setHeader("Location", uri.toASCIIString());
+		return ResponseEntity.created(uri).body(dto);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto dto){
-		ProductDto productDto = service.update(id, dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-			.buildAndExpand(dto.getId()).toUri();
-		 return ResponseEntity.created(uri).body(productDto);
+	public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody ClientDto clientDto){
+		ClientDto dto = service.update(id, clientDto);
+		return ResponseEntity.ok().body(dto);
 	}
-	
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CategoryDto> delete(@PathVariable Long id){
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-
+	
 }

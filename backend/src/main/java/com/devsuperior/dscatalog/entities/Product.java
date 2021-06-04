@@ -40,7 +40,7 @@ public class Product implements Serializable{
 	)
 	Set<Category> categories = new HashSet<>();
 	
-	private Product() {
+	public Product() {
 	}
 	
 	public Long getId() {
